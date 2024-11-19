@@ -1,5 +1,5 @@
 {
-  "name": "1022a-marketplace",
+  "name": "trabalho-frameworks",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -9,7 +9,7 @@
     "build": "npm install && tsc",
     "start": "node ./dist/main.js"
   },
-  "author": "guilhermeterenciani",
+  "author": "Gabriele, José, Julia e Nicole",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.17",
