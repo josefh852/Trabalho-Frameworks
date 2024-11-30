@@ -6,7 +6,6 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-
 app.get("/produtos", async (req, res) => {
     try {
         const connection = await mysql.createConnection({
@@ -33,7 +32,7 @@ app.post("/produtos", async (req, res) => {
             port: process.env.dbport ? parseInt(process.env.dbport) : 3306
         })
         const {id,nome,descricao,preco,imagem} = req.body
-        const [result,fields] = 
+        const [result,fields] =
         await connection.query("INSERT INTO produtos VALUES (?,?,?,?)",
             [id,nome,descricao,preco,imagem])
         await connection.end()
@@ -44,8 +43,7 @@ app.post("/produtos", async (req, res) => {
     }
 })
 
-
-app.get("/usuarios", async (req, res) => {
+app.get("/pistas", async (req, res) => {
     try {
         const connection = await mysql.createConnection({
             host: process.env.dbhost ? process.env.dbhost : "localhost",
@@ -54,7 +52,7 @@ app.get("/usuarios", async (req, res) => {
             database: process.env.dbname ? process.env.dbname : "banco1022a",
             port: process.env.dbport ? parseInt(process.env.dbport) : 3306
         })
-        const [result, fields] = await connection.query("SELECT * from usuarios")
+        const [result, fields] = await connection.query("SELECT * from pistas")
         await connection.end()
         res.send(result)
     } catch (e) {
@@ -62,6 +60,8 @@ app.get("/usuarios", async (req, res) => {
     }
 })
 
+
 app.listen(8000, () => {
     console.log("Iniciei o servidor")
 })
+
