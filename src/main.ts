@@ -52,13 +52,19 @@ app.get("/pistas", async (req, res) => {
             database: process.env.dbname ? process.env.dbname : "banco1022a",
             port: process.env.dbport ? parseInt(process.env.dbport) : 3306
         })
-        const [result, fields] = await connection.query("SELECT * from pistas")
-        await connection.end()
-        res.send(result)
+        const { id, nome, local, distancia, imagem } = req.body;
+
+        const [result, fields] = await connection.query(
+            "INSERT INTO pistas (id, nome, descricao, preco, imagem) VALUES (?, ?, ?, ?, ?)",
+            [id, nome, local, distancia, imagem]
+        );
+
+        await connection.end();
+        res.send({ message: "Pista cadastrada com sucesso!", result });
     } catch (e) {
-        res.status(500).send("Server ERROR")
-    }
-})
+        console.error(e);
+        res.status(500).send({ error: "Erro ao cadastrar pista", details: e });
+}});
 
 app.post("/pistas", async (req, res) => {
     try {
