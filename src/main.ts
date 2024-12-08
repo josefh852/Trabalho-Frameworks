@@ -33,7 +33,7 @@ app.post("/produtos", async (req, res) => {
         })
         const {id,nome,descricao,preco,imagem} = req.body
         const [result,fields] =
-        await connection.query("INSERT INTO produtos VALUES (?,?,?,?)",
+        await connection.query("INSERT INTO produtos VALUES (?,?,?,?,?)",
             [id,nome,descricao,preco,imagem])
         await connection.end()
         res.send(result)
@@ -52,20 +52,13 @@ app.get("/pistas", async (req, res) => {
             database: process.env.dbname ? process.env.dbname : "banco1022a",
             port: process.env.dbport ? parseInt(process.env.dbport) : 3306
         })
-        const { id, nome, local, distancia, imagem } = req.body;
-
-        const [result, fields] = await connection.query(
-            "INSERT INTO pistas (id, nome, descricao, preco, imagem) VALUES (?, ?, ?, ?, ?)",
-            [id, nome, local, distancia, imagem]
-        );
-
-        await connection.end();
-        res.send({ message: "Pista cadastrada com sucesso!", result });
+        const [result, fields] = await connection.query("SELECT * from pistas")
+        await connection.end()
+        res.send(result)
     } catch (e) {
-        console.error(e);
-        res.status(500).send({ error: "Erro ao cadastrar pista", details: e });
-}});
-
+        res.status(500).send("Server ERROR")
+    }
+})
 app.post("/pistas", async (req, res) => {
     try {
         const connection = await mysql.createConnection({
@@ -77,7 +70,7 @@ app.post("/pistas", async (req, res) => {
         })
         const {id,nome,descricao,preco,imagem} = req.body
         const [result,fields] =
-        await connection.query("INSERT INTO pistas VALUES (?,?,?,?)",
+        await connection.query("INSERT INTO pistas VALUES (?,?,?,?,?)",
             [id,nome,descricao,preco,imagem])
         await connection.end()
         res.send(result)
@@ -91,4 +84,3 @@ app.post("/pistas", async (req, res) => {
 app.listen(8000, () => {
     console.log("Iniciei o servidor")
 })
-
