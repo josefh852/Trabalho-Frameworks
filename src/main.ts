@@ -31,10 +31,10 @@ app.post("/produtos", async (req, res) => {
             database: process.env.dbname ? process.env.dbname : "banco1022a",
             port: process.env.dbport ? parseInt(process.env.dbport) : 3306
         })
-        const {id,nome,descricao,preco,imagem} = req.body
+        const {id,nome,descricao,preco,imagem,imagem2} = req.body
         const [result,fields] =
         await connection.query("INSERT INTO produtos VALUES (?,?,?,?,?)",
-            [id,nome,descricao,preco,imagem])
+            [id,nome,descricao,preco,imagem,imagem2])
         await connection.end()
         res.send(result)
     } catch (e) {
@@ -68,10 +68,10 @@ app.post("/pistas", async (req, res) => {
             database: process.env.dbname ? process.env.dbname : "banco1022a",
             port: process.env.dbport ? parseInt(process.env.dbport) : 3306
         })
-        const {id,nome,descricao,preco,imagem} = req.body
+        const {id,nome,descricao,preco,imagem,imagem2} = req.body
         const [result,fields] =
-        await connection.query("INSERT INTO pistas VALUES (?,?,?,?,?)",
-            [id,nome,descricao,preco,imagem])
+        await connection.query("INSERT INTO pistas VALUES (?,?,?,?,?,?)",
+            [id,nome,descricao,preco,imagem,imagem2])
         await connection.end()
         res.send(result)
     } catch (e) {
