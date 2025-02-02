@@ -7,53 +7,133 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.get("/:tabela", async (req, res) => {
+app.get("/produtos", async (req, res) => {
     try {
-        const banco = new BancoMysql();
-        await banco.criarConexao();
-        const result = await banco.listar(req.params.tabela);
-        await banco.finalizarConexao();
-        res.send(result);
+        const connection = await mysql.createConnection({
+            host: process.env.dbhost ? process.env.dbhost : "localhost",
+            user: process.env.dbuser ? process.env.dbuser : "root",
+            password: process.env.dbpassword ? process.env.dbpassword : "",
+            database: process.env.dbname ? process.env.dbname : "banco1022a",
+            port: process.env.dbport ? parseInt(process.env.dbport) : 3306
+        })
+        const [result, fields] = await connection.query("SELECT * from produtos")
+        await connection.end()
+        res.send(result)
     } catch (e) {
-        res.status(500).send("Erro ao listar dados");
+        res.status(500).send("Server ERROR")
     }
-});
+})
+app.post("/produtos", async (req, res) => {
+    try {
+        const connection = await mysql.createConnection({
+            host: process.env.dbhost ? process.env.dbhost : "localhost",
+            user: process.env.dbuser ? process.env.dbuser : "root",
+            password: process.env.dbpassword ? process.env.dbpassword : "",
+            database: process.env.dbname ? process.env.dbname : "banco1022a",
+            port: process.env.dbport ? parseInt(process.env.dbport) : 3306
+        })
+        const {id,nome,descricao,preco,imagem,imagem2} = req.body
+        const [result,fields] =
+        await connection.query("INSERT INTO produtos VALUES (?,?,?,?,?)",
+            [id,nome,descricao,preco,imagem,imagem2])
+        await connection.end()
+        res.send(result)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send("Server ERROR")
+    }
+})
 
-app.post("/:tabela", async (req, res) => {
+app.get("/pistas", async (req, res) => {
     try {
-        const banco = new BancoMysql();
-        await banco.criarConexao();
-        const result = await banco.inserir(req.params.tabela, req.body);
-        await banco.finalizarConexao();
-        res.status(201).send("Registro inserido com sucesso!");
+        const connection = await mysql.createConnection({
+            host: process.env.dbhost ? process.env.dbhost : "localhost",
+            user: process.env.dbuser ? process.env.dbuser : "root",
+            password: process.env.dbpassword ? process.env.dbpassword : "",
+            database: process.env.dbname ? process.env.dbname : "banco1022a",
+            port: process.env.dbport ? parseInt(process.env.dbport) : 3306
+        })
+        const [result, fields] = await connection.query("SELECT * from pistas")
+        await connection.end()
+        res.send(result)
     } catch (e) {
-        res.status(500).send("Erro ao inserir dados");
+        res.status(500).send("Server ERROR")
     }
-});
+})
+app.post("/pistas", async (req, res) => {
+    try {
+        const connection = await mysql.createConnection({
+            host: process.env.dbhost ? process.env.dbhost : "localhost",
+            user: process.env.dbuser ? process.env.dbuser : "root",
+            password: process.env.dbpassword ? process.env.dbpassword : "",
+            database: process.env.dbname ? process.env.dbname : "banco1022a",
+            port: process.env.dbport ? parseInt(process.env.dbport) : 3306
+        })
+        const {id,nome,descricao,preco,imagem,imagem2} = req.body
+        const [result,fields] =
+        await connection.query("INSERT INTO pistas VALUES (?,?,?,?,?,?)",
+            [id,nome,descricao,preco,imagem,imagem2])
+        await connection.end()
+        res.send(result)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send("Server ERROR")
+    }
+})
 
-app.put("/:tabela/:id", async (req, res) => {
-    try {
-        const banco = new BancoMysql();
-        await banco.criarConexao();
-        await banco.alterar(req.params.tabela, req.params.id, req.body);
-        await banco.finalizarConexao();
-        res.status(200).send("Registro alterado com sucesso!");
-    } catch (e) {
-        res.status(500).send("Erro ao alterar dados");
+//DELETAR
+app.delete("/produtos/:id",async(req,res)=>{
+    try{
+        const banco = new BancoMysql()
+        await banco.criarConexao()
+        const result = await banco.excluir(req.params.id)
+        await banco.finalizarConexao()
+        res.status(200).send("Produto excluido com sucesso id: "+req.params.id)
     }
-});
+    catch(e){
+        console.log(e)
+        res.status(500).send("Erro ao excluir")
+    }
+    
+})
 
-app.delete("/:tabela/:id", async (req, res) => {
-    try {
-        const banco = new BancoMysql();
-        await banco.criarConexao();
-        await banco.excluir(req.params.tabela, req.params.id);
-        await banco.finalizarConexao();
-        res.status(200).send("Registro excluído com sucesso!");
-    } catch (e) {
-        res.status(500).send("Erro ao excluir dados");
+//ALTERAR
+app.put("/produtos/:id",async(req,res)=>{
+    const {nome,descricao,preco,imagem,imagem2} = req.body
+    const produto = {nome,descricao,preco,imagem,imagem2}
+    const banco = new BancoMysql()
+    await banco.criarConexao()
+    const result = await banco.alterar(req.params.id,produto)
+    await banco.finalizarConexao()
+    res.status(200).send("Produto alterado com sucesso id: "+req.params.id)
+})
+
+//DELETAR
+app.delete("/pistas/:id",async(req,res)=>{
+    try{
+        const banco = new BancoMysql()
+        await banco.criarConexao()
+        const result = await banco.excluir(req.params.id)
+        await banco.finalizarConexao()
+        res.status(200).send("Produto excluido com sucesso id: "+req.params.id)
     }
-});
+    catch(e){
+        console.log(e)
+        res.status(500).send("Erro ao excluir")
+    }
+    
+})
+
+//ALTERAR
+app.put("/pistas/:id",async(req,res)=>{
+    const {nome,descricao,preco,imagem,imagem2} = req.body
+    const pistas = {nome,descricao,preco,imagem,imagem2}
+    const banco = new BancoMysql()
+    await banco.criarConexao()
+    const result = await banco.alterar(req.params.id,pistas)
+    await banco.finalizarConexao()
+    res.status(200).send("Produto alterado com sucesso id: "+req.params.id)
+})
 
 app.listen(8000, () => {
     console.log("Iniciei o servidor")
