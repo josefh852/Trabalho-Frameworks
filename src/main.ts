@@ -34,7 +34,7 @@ app.post("/produtos", async (req, res) => {
         })
         const {id,nome,descricao,preco,imagem,imagem2} = req.body
         const [result,fields] =
-        await connection.query("INSERT INTO produtos VALUES (?,?,?,?,?)",
+        await connection.query("INSERT INTO produtos VALUES (?,?,?,?,?,?)",
             [id,nome,descricao,preco,imagem,imagem2])
         await connection.end()
         res.send(result)
@@ -104,33 +104,6 @@ app.put("/produtos/:id",async(req,res)=>{
     const banco = new BancoMysql()
     await banco.criarConexao()
     const result = await banco.alterar(req.params.id,produto)
-    await banco.finalizarConexao()
-    res.status(200).send("Produto alterado com sucesso id: "+req.params.id)
-})
-
-//DELETAR
-app.delete("/pistas/:id",async(req,res)=>{
-    try{
-        const banco = new BancoMysql()
-        await banco.criarConexao()
-        const result = await banco.excluir(req.params.id)
-        await banco.finalizarConexao()
-        res.status(200).send("Produto excluido com sucesso id: "+req.params.id)
-    }
-    catch(e){
-        console.log(e)
-        res.status(500).send("Erro ao excluir")
-    }
-    
-})
-
-//ALTERAR
-app.put("/pistas/:id",async(req,res)=>{
-    const {nome,descricao,preco,imagem,imagem2} = req.body
-    const pistas = {nome,descricao,preco,imagem,imagem2}
-    const banco = new BancoMysql()
-    await banco.criarConexao()
-    const result = await banco.alterar(req.params.id,pistas)
     await banco.finalizarConexao()
     res.status(200).send("Produto alterado com sucesso id: "+req.params.id)
 })
