@@ -31,10 +31,14 @@ class BancoMysql{
     }
     async inserir(produto:{id:number,nome:string,descricao:string,preco:string,imagem:string,imagem2:string,estoque:string}){
         if(!this.connection) throw new Error("Erro de conexão com o banco de dados.")
-            const [result, fields] = await this.connection.query(
-                "INSERT INTO produtos (nome, descricao, preco, imagem, imagem2, estoque) VALUES (?,?,?,?,?,?)",
-                [produto.nome, produto.descricao, produto.preco, produto.imagem, produto.imagem2, produto.estoque]
-   ) }
+            console.log("Inserindo produto:", produto);
+
+        const [result, fields] = await this.connection.query(
+          "INSERT INTO produtos (nome, descricao, preco, imagem, imagem2, estoque) VALUES (?,?,?,?,?,?)",
+          [produto.nome, produto.descricao, produto.preco, produto.imagem, produto.imagem2, produto.estoque]
+        );
+        console.log("Resultado da inserção:", result);
+    }
     async excluir(id:string){
         if(!this.connection) throw new Error("Erro de conexão com o banco de dados.")
         const [result, fields] = await this.connection.query("DELETE FROM produtos WHERE id = ?",[id])
