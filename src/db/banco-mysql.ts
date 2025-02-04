@@ -1,8 +1,9 @@
 import mysql , { Connection, RowDataPacket } from 'mysql2/promise'
+
 class BancoMysql{
     //Atributos de uma classe
     connection:Connection|null = null
-   
+
     //Métodos
     async criarConexao(){
         this.connection = await mysql.createConnection({
@@ -13,6 +14,7 @@ class BancoMysql{
             port: process.env.dbport ? parseInt(process.env.dbport) : 3306
         })
     }
+
     async consultar(query:string,params?:any[]){
         if(!this.connection) throw new Error("Erro de conexão com o banco de dados.")
         const [result, fields] = await this.connection.query(query,params)
@@ -29,9 +31,10 @@ class BancoMysql{
     }
     async inserir(produto:{id:number,nome:string,descricao:string,preco:string,imagem:string,imagem2:string,estoque:string}){
         if(!this.connection) throw new Error("Erro de conexão com o banco de dados.")
-        const [result, fields] = await this.connection.query("INSERT INTO produtos VALUES (?,?,?,?,?,?,?)",[produto.id,produto.nome,produto.descricao,produto.preco,produto.imagem,produto.imagem2,produto.estoque])
-        return result
-    }
+            const [result, fields] = await this.connection.query(
+                "INSERT INTO produtos (nome, descricao, preco, imagem, imagem2, estoque) VALUES (?,?,?,?,?,?)",
+                [produto.nome, produto.descricao, produto.preco, produto.imagem, produto.imagem2, produto.estoque]
+   ) }
     async excluir(id:string){
         if(!this.connection) throw new Error("Erro de conexão com o banco de dados.")
         const [result, fields] = await this.connection.query("DELETE FROM produtos WHERE id = ?",[id])
