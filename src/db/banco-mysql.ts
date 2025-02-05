@@ -29,7 +29,7 @@ class BancoMysql{
         const [result, fields] = await this.connection.query("SELECT * FROM produtos")
         return result
     }
-    async inserir(produto:{id:number,nome:string,descricao:string,preco:string,imagem:string,imagem2:string,estoque:number}){
+    async inserir(produto:{id:number,nome:string,descricao:string,preco:string,imagem:string,imagem2:string,estoque:string}){
         if(!this.connection) throw new Error("Erro de conexão com o banco de dados.")
             console.log("Inserindo produto:", produto);
 
@@ -44,7 +44,7 @@ class BancoMysql{
         const [result, fields] = await this.connection.query("DELETE FROM produtos WHERE id = ?",[id])
         return result
     }
-    async alterar(id:string,produto:{id?:string,nome:string,descricao:string,preco:string,imagem:string,imagem2:string,estoque:number}){
+    async alterar(id:string,produto:{id?:string,nome:string,descricao:string,preco:string,imagem:string,imagem2:string,estoque:string}){
         if(!this.connection) throw new Error("Erro de conexão com o banco de dados.")
         const [result, fields] = await this.connection.query("UPDATE produtos SET nome=?,descricao=?,preco=?,imagem=?,imagem2=?,estoque=? WHERE id=?",[produto.nome,produto.descricao,produto.preco,produto.imagem,produto.imagem2,produto.estoque,id])
         return result
